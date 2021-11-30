@@ -63,6 +63,5 @@ public class Tag {
 
         OPEN_COMMENT    = 303, // /*
         CLOSE_COMMENT   = 304, // */
-        COMMENT_BLOCK   = 305, // /* */
-
+        COMMENT_BLOCK   = 305;  // /* */
 }

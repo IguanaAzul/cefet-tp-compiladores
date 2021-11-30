@@ -1,7 +1,11 @@
 package Utils;
 
 public class Word extends Token{
-	 private String lexeme = "";
+	public String getLexeme() {
+		return lexeme;
+	}
+
+	private String lexeme = "";
 
 	 public static final Word eq = new Word ("==", Tag.EQUAL);
 	 public static final Word gr = new Word (">", Tag.GREATER);
@@ -20,4 +24,4 @@ public class Word extends Token{
 	 public String toString(){
 		return "" + lexeme;
 	 }
-}
+}

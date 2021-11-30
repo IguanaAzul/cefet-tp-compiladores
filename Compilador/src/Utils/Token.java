@@ -9,6 +9,6 @@ public class Token {
 
     public String toString() 
     {
-        return "" + tag.toString();
+        return String.valueOf(tag);
     }
 }
