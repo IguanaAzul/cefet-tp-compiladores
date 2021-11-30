@@ -1,0 +1,12 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\Compilador",
+    "\\Compilador\\src",
+    "\\Compilador\\src\\Lexico",
+    "\\Compilador\\src\\Symbols",
+    "\\Compilador\\src\\Utils"
+  ],
+  "SelectedNode": "\\Compilador\\src\\Main.java",
+  "PreviewInSolutionExplorer": false
+}
