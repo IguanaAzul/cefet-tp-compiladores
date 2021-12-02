@@ -21,10 +21,8 @@ public class Lexer {
 
 	private final Hashtable<String, Word> words = new Hashtable<>();
 
-	/* Método para inserir palavras reservadas na HashTable */
 	private void reserve(Word w){
-		words.put(w.getLexeme(), w); // lexema é a chave para entrada na
-		//HashTable
+		words.put(w.getLexeme(), w);
 	}
 
 	public Lexer(String fileName) throws IOException {
@@ -36,7 +34,6 @@ public class Lexer {
 			throw e;
 		}
 
-		//Insere palavras reservadas na HashTable
 		reserve(new Word ("program", Tag.PROGRAM));
 		reserve(new Word ("begin", Tag.BEGIN));
 		reserve(new Word ("end", Tag.END));
@@ -69,7 +66,8 @@ public class Lexer {
 	}
 
 	public void readFile() throws Exception{
-		for (Token token = scan(); token.tag != 65535; token = scan());
+		for (Token token = scan(); token.tag != 65535; token = scan())
+			System.out.println(token);
 	}
 
 	public Token scan() throws Exception {
@@ -86,26 +84,24 @@ public class Lexer {
 		switch(ch){
 			//Operadores
 			case '&':
-				if (readch('&')) return Word.and;
+				if (readch('&')) return new Word ("&&", Tag.AND);
 				else return new Token('&');
 			case '|':
-				if (readch('|')) return Word.or;
+				if (readch('|')) return new Word ("||", Tag.OR);
 				else return new Token('|');
 			case '!':
-				if (readch('=')) return Word.no;
-				else return Word.ne;
+				if (readch('=')) return new Word ("!", Tag.NOT);
+				else return new Word ("!=", Tag.NOT_EQUAL);
 			case '=':
-				if (readch('=')) return Word.eq;
+				if (readch('=')) return new Word ("==", Tag.EQUAL);
 				else return new Token('=');
 			case '<':
-				if (readch('=')) return Word.le;
-				else return Word.lo;
+				if (readch('=')) return new Word ("<=", Tag.LOWER_EQUAL);
+				else return new Word ("<", Tag.LOWER);
 			case '>':
-				if (readch('=')) return Word.ge;
-				else return Word.gr;
-
+				if (readch('=')) new Word (">=", Tag.GREATER_EQUAL);
+				else return new Word (">", Tag.GREATER);
 			case '\'':
-
 				readch();
 				if(ch!='\''){
 					c.append(ch);
@@ -116,17 +112,16 @@ public class Lexer {
 					Word w = words.get(s);
 					if( w != null )
 						return w;
-					w = new Word(s, Tag.CHAR_CONSTANT);
+					w = new Word(s, Tag.CHAR_CONSTANT, line);
 					words.put(s, w);
 					return w;
 				}
 				else throw new Exception("Não é um caractere válido");
-
 			case '{':
 				readch();
 				while(ch!='}'){
 					c.append(ch);
-					if (ch == ' ' || ch == '\t' || ch == '\r' || ch == '\b') throw new Exception("Literal mal formado");
+					if (ch == '\n' || ch == '\t' || ch == '\r' || ch == '\b') throw new Exception("Literal mal formado");
 					readch();
 				}
 				readch();
@@ -134,10 +129,9 @@ public class Lexer {
 				Word w = words.get(s);
 				if( w != null )
 					return w;
-				w = new Word(s, Tag.LITERAL);
+				w = new Word(s, Tag.LITERAL, line);
 				words.put(s, w);
 				return w;
-
 			case'/':
 				readch();
 				if(ch=='*'){
@@ -161,7 +155,7 @@ public class Lexer {
 					w = words.get(s);
 					if( w != null )
 						return w;
-					w = new Word(s, Tag.COMMENT_BLOCK);
+					w = new Word(s, Tag.COMMENT_BLOCK, line);
 					words.put(s, w);
 					return w;
 				}
@@ -201,11 +195,9 @@ public class Lexer {
 			words.put(s, w);
 			return w;
 		}
-
 		//Caracteres não especificados
 		Token t = new Token(ch);
 		ch = ' ';
 		return t;
-
 	}
 }
