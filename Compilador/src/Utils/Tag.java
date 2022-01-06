@@ -2,7 +2,7 @@ package Utils;
 
 public class Tag {
     public final static int
-            //Keywords
+    //Keywords
             PROGRAM           = 256, // program
             BEGIN            = 257, // begin
             END            = 258, // end
