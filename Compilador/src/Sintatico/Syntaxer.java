@@ -184,6 +184,7 @@ public class Syntaxer {
     // term | simple-expr addop term
     private void simple_expr() throws SyntaticError {
         term();
+        recursive_simple_expr();
     }
 
     private void recursive_simple_expr() throws SyntaticError {
@@ -218,76 +219,69 @@ public class Syntaxer {
 
     // factor | ! factor | "-" factor
     private void factor_a() throws SyntaticError {
-
+        switch (current.tag) {
+            case Tag.NOT -> getNextToken(Tag.NOT);
+            case Tag.SUB -> getNextToken(Tag.SUB);
+            default -> {
+            }
+        }
+        factor();
     }
 
     // identifier | constant | "(" expression ")"
     private void factor() throws SyntaticError {
-
+        switch (current.tag) {
+            case Tag.IDENTIFIER -> getNextToken(Tag.IDENTIFIER);
+            case Tag.INTEGER_CONSTANT, Tag.FLOAT_CONSTANT, Tag.CHAR_CONSTANT -> constant();
+            case Tag.LEFT_PAR -> {
+                getNextToken(Tag.LEFT_PAR);
+                expression();
+                getNextToken(Tag.RIGHT_PAR);
+            }
+            default -> throw new SyntaticError(this.current + " is an Invalid Factor", tokenList.get(0).line);
+        }
     }
 
     // "==" | ">" | ">=" | "<" | "<=" | "!="
     private void relop() throws SyntaticError {
-
+        switch (current.tag) {
+            case Tag.EQUAL -> getNextToken(Tag.EQUAL);
+            case Tag.GREATER -> getNextToken(Tag.GREATER);
+            case Tag.GREATER_EQUAL -> getNextToken(Tag.GREATER_EQUAL);
+            case Tag.LOWER -> getNextToken(Tag.LOWER);
+            case Tag.LOWER_EQUAL -> getNextToken(Tag.LOWER_EQUAL);
+            case Tag.NOT_EQUAL -> getNextToken(Tag.NOT_EQUAL);
+            default -> throw new SyntaticError(this.current + " is an Invalid Relational Operator", tokenList.get(0).line);
+        }
     }
 
     // "+" | "-" | ||
     private void addop() throws SyntaticError {
-
+        switch (current.tag) {
+            case Tag.ADD -> getNextToken(Tag.ADD);
+            case Tag.SUB -> getNextToken(Tag.SUB);
+            case Tag.OR -> getNextToken(Tag.OR);
+            default -> throw new SyntaticError(this.current + " is an Invalid Add Operator", tokenList.get(0).line);
+        }
     }
 
     // "*" | "/" | &&
     private void mulop() throws SyntaticError {
-
+        switch (current.tag) {
+            case Tag.MUL -> getNextToken(Tag.MUL);
+            case Tag.DIV -> getNextToken(Tag.DIV);
+            case Tag.AND -> getNextToken(Tag.AND);
+            default -> throw new SyntaticError(this.current + " is an Invalid Mul Operator", tokenList.get(0).line);
+        }
     }
 
     // integer_const | float_const | char_const
     private void constant() throws SyntaticError {
-
+        switch (current.tag) {
+            case Tag.INTEGER_CONSTANT -> getNextToken(Tag.INTEGER_CONSTANT);
+            case Tag.FLOAT_CONSTANT -> getNextToken(Tag.FLOAT_CONSTANT);
+            case Tag.CHAR_CONSTANT -> getNextToken(Tag.CHAR_CONSTANT);
+            default -> throw new SyntaticError(this.current + " is an Invalid Constant", tokenList.get(0).line);
+        }
     }
-
-//    // digit+
-//    private void integer_const() throws SyntaticError {
-//
-//    }
-//
-//    // digit+ “.”digit+
-//    private void float_const() throws SyntaticError {
-//
-//    }
-//
-//    // " ‘ " carac " ’ "
-//    private void char_const() throws SyntaticError {
-//
-//    }
-//
-//    // "{" caractere* "}"
-//    private void literal() throws SyntaticError {
-//
-//    }
-//
-//    // letter (letter | digit | “_”)*
-//    private void identifier() throws SyntaticError {
-//
-//    }
-//
-//    // [A-za-z]
-//    private void letter() throws SyntaticError {
-//
-//    }
-//
-//    // [0-9]
-//    private void digit() throws SyntaticError {
-//
-//    }
-//
-//    // um dos caracteres ASCII
-//    private void carac() throws SyntaticError {
-//
-//    }
-//
-//    // um dos caracteres ASCII, exceto quebra de linha
-//    private void caractere() throws SyntaticError {
-//
-//    }
 }
