@@ -24,10 +24,6 @@ public class Syntaxer {
         }
     }
 
-    public void start() throws SyntaticError {
-        program();
-    }
-
     // program identifier begin [decl-list] stmt-list end "."
     private void program() throws SyntaticError {
         getNextToken(Tag.PROGRAM);
@@ -35,6 +31,8 @@ public class Syntaxer {
         getNextToken(Tag.BEGIN);
         decl_list();
         stmt_list();
+        getNextToken(Tag.END);
+        getNextToken(Tag.DOT);
     }
 
     // decl ";" { decl ";"}
