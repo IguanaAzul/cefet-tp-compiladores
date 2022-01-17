@@ -21,7 +21,7 @@ public class Syntaxer {
             this.current = tokenList.get(tokenIndex);
         }
         else {
-            throw new SyntaticError("Expected " + expected + ", got " + this.current, tokenList.get(0).line);
+            throw new SyntaticError("Expected tag " + expected + ", got " + Character.toString((char)this.current.tag), tokenList.get(this.tokenIndex).line);
         }
     }
 

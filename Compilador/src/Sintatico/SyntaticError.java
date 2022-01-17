@@ -12,6 +12,6 @@ public class SyntaticError extends Exception{
 
     @Override
     public String getMessage() {
-        return "Syntatic Error: " + this.error + "\nAt line: " + this.line;
+        return "Syntatic Error: " + this.error + "\tAt line: " + this.line;
     }
 }
