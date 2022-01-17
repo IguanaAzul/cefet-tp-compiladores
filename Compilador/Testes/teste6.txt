@@ -1,0 +1,8 @@
+program teste6
+begin
+    a is int;
+    b is int;
+    a = 3;
+    b = 7;
+    a = a + b;
+end.
