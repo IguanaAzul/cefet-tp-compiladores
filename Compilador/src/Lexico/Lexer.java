@@ -19,7 +19,12 @@ public class Lexer {
 		return words;
 	}
 
+	public ArrayList<Token> getTokenList() {
+		return token_list;
+	}
+
 	private final Hashtable<String, Word> words = new Hashtable<>();
+	private final ArrayList<Token> token_list = new ArrayList<>();
 
 	private void reserve(Word w){
 		words.put(w.getLexeme(), w);
@@ -47,7 +52,9 @@ public class Lexer {
 		reserve(new Word ("do", Tag.DO));
 		reserve(new Word ("read", Tag.READ));
 		reserve(new Word ("write", Tag.WRITE));
-
+		reserve(new Word ("int", Tag.INT));
+		reserve(new Word ("float", Tag.FLOAT));
+		reserve(new Word ("char", Tag.CHAR));
 	}
 
 	/*Lê o próximo caractere do arquivo*/
@@ -66,8 +73,12 @@ public class Lexer {
 	}
 
 	public void readFile() throws Exception{
-		for (Token token = scan(); token.tag != 65535; token = scan())
-			System.out.println(token);
+		for (Token token = scan(); token.tag != 65535; token = scan()){
+			token_list.add(token);
+//			System.out.println("String: " + token.toString() + " Tag: " + token.tag + " Linha: " + token.line);
+		}
+
+
 	}
 
 	public Token scan() throws Exception {
@@ -84,23 +95,23 @@ public class Lexer {
 		switch(ch){
 			//Operadores
 			case '&':
-				if (readch('&')) return new Word ("&&", Tag.AND);
+				if (readch('&')) return new Word ("&&", Tag.AND, line);
 				else return new Token('&');
 			case '|':
-				if (readch('|')) return new Word ("||", Tag.OR);
+				if (readch('|')) return new Word ("||", Tag.OR, line);
 				else return new Token('|');
 			case '!':
-				if (readch('=')) return new Word ("!", Tag.NOT);
-				else return new Word ("!=", Tag.NOT_EQUAL);
+				if (readch('=')) return new Word ("!", Tag.NOT, line);
+				else return new Word ("!=", Tag.NOT_EQUAL, line);
 			case '=':
-				if (readch('=')) return new Word ("==", Tag.EQUAL);
+				if (readch('=')) return new Word ("==", Tag.EQUAL, line);
 				else return new Token('=');
 			case '<':
-				if (readch('=')) return new Word ("<=", Tag.LOWER_EQUAL);
-				else return new Word ("<", Tag.LOWER);
+				if (readch('=')) return new Word ("<=", Tag.LOWER_EQUAL, line);
+				else return new Word ("<", Tag.LOWER, line);
 			case '>':
-				if (readch('=')) new Word (">=", Tag.GREATER_EQUAL);
-				else return new Word (">", Tag.GREATER);
+				if (readch('=')) new Word (">=", Tag.GREATER_EQUAL, line);
+				else return new Word (">", Tag.GREATER, line);
 			case '\'':
 				readch();
 				if(ch!='\''){
@@ -159,6 +170,12 @@ public class Lexer {
 					words.put(s, w);
 					return w;
 				}
+			case ';':
+				readch();
+				s = c.toString();
+				w = new Word(s, Tag.SEMICOLON, line);
+				words.put(s, w);
+				return w;
 		}
 		//Números
 		if (Character.isDigit(ch)){
@@ -191,7 +208,7 @@ public class Lexer {
 			String s = sb.toString();
 			Word w = words.get(s);
 			if (w != null) return w; //palavra já existe na HashTable
-			w = new Word (s, Tag.IDENTIFIER);
+			w = new Word (s, Tag.IDENTIFIER, line);
 			words.put(s, w);
 			return w;
 		}

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import Utils.Token;
 import Utils.Tag;
+import Utils.Word;
 
 public class Syntaxer {
     private final ArrayList<Token> tokenList;
@@ -25,7 +26,8 @@ public class Syntaxer {
     }
 
     // program identifier begin [decl-list] stmt-list end "."
-    private void program() throws SyntaticError {
+    public void program() throws SyntaticError {
+        this.current = this.tokenList.get(tokenIndex);
         getNextToken(Tag.PROGRAM);
         getNextToken(Tag.IDENTIFIER);
         getNextToken(Tag.BEGIN);
