@@ -75,7 +75,7 @@ public class Lexer {
 	public void readFile() throws Exception{
 		for (Token token = scan(); token.tag != 65535; token = scan()){
 			token_list.add(token);
-			System.out.println("String: " + token.toString() + " Tag: " + token.tag + " Linha: " + token.line);
+//			System.out.println("String: " + token.toString() + " Tag: " + token.tag + " Linha: " + token.line);
 		}
 
 

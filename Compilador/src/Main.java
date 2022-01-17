@@ -11,9 +11,8 @@ public class Main {
         Lexer lexer = new Lexer("./Compilador/Testes/teste6.txt");
         lexer.readFile();
         ArrayList<Token> token_list = lexer.getTokenList();
-        Hashtable<String, Word> words = lexer.getWords();
         Syntaxer sintatic = new Syntaxer(token_list);
         sintatic.program();
-        System.out.println("Fim da an�lise sint�tica");
+        System.out.println("Fim da análise sintática");
     }
 }
