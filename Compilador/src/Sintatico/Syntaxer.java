@@ -1,7 +1,10 @@
 package Sintatico;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 
+import Semantico.Semantico;
+import Semantico.SemanticError;
 import Utils.Token;
 import Utils.Tag;
 import Utils.Word;
@@ -10,9 +13,13 @@ public class Syntaxer {
     private final ArrayList<Token> tokenList;
     private Token current;
     private int tokenIndex = 0;
+    private final Semantico semantico;
+    Hashtable<String, Word> words;
 
-    public Syntaxer(ArrayList<Token> tokenList) {
+    public Syntaxer(ArrayList<Token> tokenList, Hashtable<String, Word> words) {
         this.tokenList = tokenList;
+        this.semantico = new Semantico(words);
+        this.words = words;
     }
 
     private void getNextToken(int expected) throws SyntaticError {
@@ -26,7 +33,7 @@ public class Syntaxer {
     }
 
     // program identifier begin [decl-list] stmt-list end "."
-    public void program() throws SyntaticError {
+    public void program() throws SyntaticError, SemanticError {
         this.current = this.tokenList.get(tokenIndex);
         getNextToken(Tag.PROGRAM);
         getNextToken(Tag.IDENTIFIER);
@@ -38,7 +45,7 @@ public class Syntaxer {
     }
 
     // decl ";" { decl ";"}
-    private void decl_list() throws SyntaticError {
+    private void decl_list() throws SyntaticError, SemanticError {
         decl();
         while (current.tag == Tag.SEMICOLON) {
             getNextToken(Tag.SEMICOLON);
@@ -48,27 +55,45 @@ public class Syntaxer {
     }
 
     // ident-list is type
-    private void decl() throws SyntaticError {
-        ident_list();
+    private void decl() throws SyntaticError, SemanticError {
+        ArrayList<Token> identifiers = ident_list();
         getNextToken(Tag.IS);
-        type();
+        int type = type();
+        semantico.appendToSymbolTable(identifiers, type);
     }
 
     // identifier {"," identifier}
-    private void ident_list() throws SyntaticError {
+    private ArrayList<Token> ident_list() throws SyntaticError {
+        ArrayList<Token> identifiers = new ArrayList<Token> ();
+        if (this.current.tag == Tag.IDENTIFIER){
+            identifiers.add(this.current);
+        }
         getNextToken(Tag.IDENTIFIER);
         while (current.tag == Tag.COMMA) {
             getNextToken(Tag.COMMA);
+            if (this.current.tag == Tag.IDENTIFIER) {
+                identifiers.add(this.current);
+            }
             getNextToken(Tag.IDENTIFIER);
         }
+        return identifiers;
     }
 
     // int | float | char
-    private void type() throws SyntaticError {
+    private int type() throws SyntaticError {
         switch (current.tag) {
-            case Tag.INT -> getNextToken(Tag.INT);
-            case Tag.FLOAT -> getNextToken(Tag.FLOAT);
-            case Tag.CHAR -> getNextToken(Tag.CHAR);
+            case Tag.INT -> {
+                getNextToken(Tag.INT);
+                return Tag.INT;
+            }
+            case Tag.FLOAT -> {
+                getNextToken(Tag.FLOAT);
+                return Tag.FLOAT;
+            }
+            case Tag.CHAR -> {
+                getNextToken(Tag.CHAR);
+                return Tag.CHAR;
+            }
             default -> throw new SyntaticError("Expected Type (int, float or char), got " + this.current, tokenList.get(0).line);
         }
     }

@@ -75,10 +75,7 @@ public class Lexer {
 	public void readFile() throws Exception{
 		for (Token token = scan(); token.tag != 65535; token = scan()){
 			token_list.add(token);
-//			System.out.println("String: " + token.toString() + " Tag: " + token.tag + " Linha: " + token.line);
 		}
-
-
 	}
 
 	public Token scan() throws Exception {
@@ -189,7 +186,7 @@ public class Lexer {
 
 			float aux = 10;
 			float float_value = 0;
-			for(;;) {
+			while(true) {
 				readch();
 				if( !Character.isDigit(ch) ) break;
 				float_value += (Character.digit(ch, 10) / 10.0);
