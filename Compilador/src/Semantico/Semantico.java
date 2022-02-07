@@ -27,13 +27,24 @@ public class Semantico {
             tabelaSimbolos.put(i, type);
         }
     }
+	
+    public boolean checkIdExists(Word identifier) {
+	if this.words.containsKey(identifier.getLexeme()) {
+	   return true;
+	}
+        return false;
+    }
 
-    public void checkType(Token identifier) {
+    public void checkAtbType(Word identifier, int type) {
+	if (identifier.getTag() == type) {
+		return true;
+	}
+	return false;
     }
 }
 
 
-//    Checar se o tipo atribuido é válido.
-//    Checar reuso de variável.
-//    Checar se a variável atribuída existe.
+//    Checar se o tipo atribuido é válido. ok
+//    Checar reuso de variável. ok
+//    Checar se a variável atribuída existe. ok
 //    Checar os tipos na operação.

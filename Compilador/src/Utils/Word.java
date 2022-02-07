@@ -4,7 +4,10 @@ public class Word extends Token{
 	public String getLexeme() {
 		return lexeme;
 	}
-
+	
+	public int getTag() {
+		return super(tag);
+ 	}
 	private String lexeme = "";
 
 	public Word (String s, int tag) {
